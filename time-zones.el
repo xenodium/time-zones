@@ -35,6 +35,7 @@
 ;;
 ;; ✨ Please support this work https://github.com/sponsors/xenodium ✨
 
+(require 'browse-url)
 (require 'json)
 (require 'map)
 (require 'seq)
@@ -349,7 +350,13 @@ Returns an alist of (IANA-TZ . POSIX-TZ) pairs."
   "Download and parse the countries+states+cities JSON data."
   (let ((url-mime-charset-string "utf-8")
         (url-automatic-caching nil)
-        (data-buffer (url-retrieve-synchronously time-zones--timezones-url)))
+        ;; GitHub's download redirect treats a raw "+" as a space, so
+        ;; escape it before requesting.  `url-encode-url' leaves
+        ;; "+" untouched, hence the targeted encoding.  See
+        ;; https://github.com/xenodium/time-zones/issues/19
+        (data-buffer (url-retrieve-synchronously
+                      (browse-url-url-encode-chars
+                       time-zones--timezones-url "[+]"))))
     (with-current-buffer data-buffer
       (goto-char (point-min))
       (search-forward "\n\n")
