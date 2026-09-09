@@ -424,7 +424,7 @@ Returns an alist of (IANA-TZ . POSIX-TZ) pairs."
 (defun time-zones--save-city-list ()
   "Save the city list to file for persistence across sessions."
   (with-temp-file time-zones--city-list-file
-    (insert ";; -*- lexical-binding: t -*-")
+    (insert ";; -*- lexical-binding: t -*-"\n\n)
     (insert ";;; Saved time-zones city list\n")
     (insert ";; This file is auto-generated. Do not edit manually.\n\n")
     (insert "(setq time-zones--city-list\n")
